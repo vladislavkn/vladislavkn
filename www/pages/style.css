@@ -1,0 +1,88 @@
+:root {
+    --paper: #e8edf1;
+    --ink: #17233a;
+    --quiet: #5d6b80;
+    --link: #2a45d8;
+    --link-hover: #17233a;
+
+    --font: "Schibsted Grotesk", system-ui, sans-serif;
+    --step-0: 1.0625rem;
+    --step-1: 1.5rem;
+    --step-2: clamp(2.5rem, 9vw, 5.5rem);
+
+    color-scheme: light dark;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --paper: #121a28;
+        --ink: #dfe6ee;
+        --quiet: #8b98ab;
+        --link: #8ea2ff;
+        --link-hover: #dfe6ee;
+    }
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    min-height: 100svh;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: clamp(1.5rem, 6vw, 5rem);
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--font);
+    font-size: var(--step-0);
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+}
+
+main {
+    max-width: 38rem;
+}
+
+h1 {
+    margin: 0 0 1.5rem;
+    font-size: var(--step-2);
+    font-weight: 600;
+    line-height: 0.95;
+    letter-spacing: -0.04em;
+}
+
+p {
+    margin: 0 0 3rem;
+    max-width: 32rem;
+    color: var(--quiet);
+}
+
+a {
+    color: var(--link);
+    text-decoration-thickness: 0.08em;
+    text-underline-offset: 0.2em;
+}
+
+a:hover {
+    color: var(--link-hover);
+}
+
+a:focus-visible {
+    outline: 2px solid var(--link);
+    outline-offset: 4px;
+    border-radius: 2px;
+}
+
+.links {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    font-size: var(--step-1);
+    font-weight: 500;
+    line-height: 1.6;
+}

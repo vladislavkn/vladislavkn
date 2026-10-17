@@ -1,0 +1,54 @@
+name: Deploy website
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - "www/**"
+      - ".github/workflows/pages.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/configure-pages@v6
+      - id: builder-cache
+        uses: actions/cache@v6
+        with:
+          path: www/bin/build-linux-amd64
+          key: builder-${{ runner.os }}-${{ hashFiles('www/build.go', 'www/go.mod', 'www/go.sum') }}
+      - if: steps.builder-cache.outputs.cache-hit != 'true'
+        uses: actions/setup-go@v7
+        with:
+          go-version-file: www/go.mod
+          cache-dependency-path: www/go.sum
+      - if: steps.builder-cache.outputs.cache-hit != 'true'
+        name: Build builder
+        working-directory: www
+        run: make build-linux
+      - name: Build website
+        run: www/bin/build-linux-amd64 "$GITHUB_WORKSPACE/www"
+      - uses: actions/upload-pages-artifact@v5
+        with:
+          path: www/target
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v5
